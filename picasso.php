@@ -13,6 +13,10 @@
  * @package         Picasso
  */
 
+function pics_register_menus() {
+  pics_plugin_menu();
+}
+
 function pics_plugin_menu()
 {
   add_menu_page("Picasso", "Picasso", "manage_options", "picasso-menu", "pics_general_page");
@@ -24,3 +28,5 @@ function pics_general_page()
   <div id="picasso-general-page"></div>
 <?php
 }
+
+add_action("admin_menu", "pics_register_menus");
