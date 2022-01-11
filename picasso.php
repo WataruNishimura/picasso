@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name:     Picasso
  * Plugin URI:      https://github.com/crafts-digitally/picasso
@@ -12,4 +13,14 @@
  * @package         Picasso
  */
 
-// Your code starts here.
+function pics_plugin_menu()
+{
+  add_menu_page("Picasso", "Picasso", "manage_options", "picasso-menu", "pics_general_page");
+}
+
+function pics_general_page()
+{
+?>
+  <div id="picasso-general-page"></div>
+<?php
+}
