@@ -29,4 +29,14 @@ function pics_general_page()
 <?php
 }
 
+function pics_admin_scripts($hook_suffix) {
+
+  $asset_file = include_once(plugin_dir_path(__FILE__) . "build/index.asset.php" );
+  wp_enqueue_style("pics-admin-plugin-style", plugin_dir_url(__FILE__) . "/build/index.css", array("wp-components"));
+  wp_enqueue_script("pics-admin-plugin-script", plugin_dir_url(__FILE__) . "build/index.js", $asset_file["dependencies"], $asset_file["version"], true);
+
+
+}
+
+add_action("admin_enqueue_scripts", "pics_admin_scripts");
 add_action("admin_menu", "pics_register_menus");

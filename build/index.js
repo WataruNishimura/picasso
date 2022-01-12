@@ -1,0 +1,1 @@
+!function(){"use strict";var e=window.wp.element;(0,e.render)((0,e.createElement)((()=>(0,e.createElement)("div",{className:"wrap"},(0,e.createElement)("h1",null,"オプション設定"))),null),document.getElementById("picasso-general-page"))}();
