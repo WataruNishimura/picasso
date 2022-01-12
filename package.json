@@ -4,7 +4,8 @@
   "main": "Gruntfile.js",
   "author": "WATARU NISHIMURA",
   "scripts": {
-    "start": "grunt default",
+    "start": "wp-scripts start",
+    "build": "wp-scripts build",
     "readme": "grunt readme",
     "i18n": "grunt i18n"
   },
@@ -15,5 +16,5 @@
     "grunt-wp-readme-to-markdown": "~1.0.0"
   },
   "repository": "git@github.com:crafts-digitally/picasso.git",
-  "license": "GNU"
+  "license": "GPL-2.0-only"
 }
