@@ -2,10 +2,19 @@ import "./scss/admin.scss"
 
 import { render } from "@wordpress/element"
 
+import {
+  ToggleControl,
+  TextControl,
+  RangeControl
+} from "@wordpress/components"
+
 const GeneralPage = () => {
   return (
     <div className="wrap">
-      <h1>オプション設定</h1>
+      <h1>基本設定</h1>
+      <ToggleControl
+        label="広告を表示する"
+      />
     </div>
   )
 }
