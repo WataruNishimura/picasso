@@ -1,0 +1,16 @@
+/*!***********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./src/admin/settings/scss/admin.scss ***!
+  \***********************************************************************************************************************************************************************************************************************************************************/
+#picasso-general-page {
+  max-width: 500px;
+}
+
+.components-color-picker {
+  max-width: 300px;
+}
+.components-color-picker__body {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/*# sourceMappingURL=basic.css.map*/
