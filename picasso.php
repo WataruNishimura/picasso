@@ -14,54 +14,111 @@
  */
 
 
-function pics_register_menus()
-{
-  pics_plugin_menu();
-}
 
-function pics_plugin_menu()
+class PicassoMenu
 {
-  add_menu_page("Picasso 基本設定", "Picasso", "manage_options", "picasso-menu", "pics_general_page");
-}
 
-function pics_general_page()
-{
+  static $instance = false;
+
+  private function __construct()
+  {
+    if (function_exists("add_action")) {
+      add_action("admin_menu", array($this, "register_menu"));
+    }
+  }
+
+  public static function get_instance()
+  {
+    if (!self::$instance) {
+      self::$instance = new self();
+    }
+    return self::$instance;
+  }
+
+  function register_menu()
+  {
+    $this->plugin_menu();
+  }
+
+  function plugin_menu()
+  {
+    add_menu_page("Picasso 基本設定", "Picasso", "manage_options", "picasso-menu", array($this, "general_page"));
+  }
+
+  function general_page()
+  {
+
 ?>
-  <div id="picasso-general-page"></div>
+    <div id="picasso-general-page"></div>
 <?php
-}
-
-function current_pagehook()
-{
-    global $hook_suffix;
-    if( !current_user_can( 'manage_options') ) return;
-    echo '<div class="updated"><p>hook_suffix : ' . $hook_suffix . '</p></div>';
-}
-add_action( 'admin_notices', 'current_pagehook' );
-
-function pics_admin_scripts($hook_suffix)
-{
-  if ($hook_suffix == "toplevel_page_picasso-menu") {
-    $asset_file = include_once(plugin_dir_path(__FILE__) . "build/admin/settings/basic.asset.php");
-    wp_enqueue_style("pics-admin-plugin-style", plugin_dir_url(__FILE__) . "/build/admin/settings/basic.css", array("wp-components"));
-    wp_enqueue_script("pics-admin-plugin-script", plugin_dir_url(__FILE__) . "build/admin/settings/basic.js", $asset_file["dependencies"], $asset_file["version"], true);
-  }
-
-  
-  if ($hook_suffix == "post.php" || $hook_suffix == "post-new.php") {
-    $asset_file = include_once(plugin_dir_path(__FILE__) . "build/index.asset.php");
-    wp_enqueue_style("pics-admin-plugin-style", plugin_dir_url(__FILE__) . "/build/index.css", array("wp-components"));
-    wp_enqueue_script("pics-admin-plugin-script", plugin_dir_url(__FILE__) . "build/index.js", $asset_file["dependencies"], $asset_file["version"], true);
   }
 }
-
-add_theme_support('post-thumbnails');
-
-function manage_picasso_query_vars($query_vars)
+class PicassoPlugin
 {
-  $query_vars[] = "picasso_image_id";
-  return $query_vars;
+
+  static $instance = false;
+  static $menu;
+
+  public static function get_instance()
+  {
+    if (!self::$instance) {
+      self::$instance = new self();
+    }
+    return self::$instance;
+  }
+
+  private function __construct()
+  {
+    if (function_exists("add_theme_support")) {
+      add_theme_support('post-thumbnails');
+    }
+    if (function_exists("add_action")) {
+      add_action("admin_enqueue_scripts", array($this, "register_admin_scripts"));
+      add_action('admin_notices', array($this, "current_pagebook"));
+      add_action("init", array($this, "plugin_init"));
+    }
+
+
+    self::$menu = PicassoMenu::get_instance();
+  }
+
+  function plugin_init()
+  {
+
+    $this->register_settings();
+  }
+
+  function current_pagebook()
+  {
+    if (defined("WP_DEBUG") && WP_DEBUG === true) {
+      global $hook_suffix;
+      if (!current_user_can('manage_options')) return;
+      echo '<div class="updated"><p>hook_suffix : ' . $hook_suffix . '</p></div>';
+    }
+  }
+
+  function register_settings()
+  {
+    register_setting("picasso_admin_settings", "picasso_text_color", array("show_in_rest" => true));
+    register_setting("picasso_admin_settings", "picasso_background_color", array("show_in_rest" => true));
+  }
+
+  function register_admin_scripts($hook_suffix)
+  {
+    if ($hook_suffix == "toplevel_page_picasso-menu") {
+      $asset_file = include_once(plugin_dir_path(__FILE__) . "build/admin/settings/basic.asset.php");
+      wp_enqueue_style("pics-admin-plugin-style", plugin_dir_url(__FILE__) . "/build/admin/settings/basic.css", array("wp-components"));
+      wp_enqueue_script("pics-admin-plugin-script", plugin_dir_url(__FILE__) . "build/admin/settings/basic.js", $asset_file["dependencies"], $asset_file["version"], true);
+    }
+
+
+    if ($hook_suffix == "post.php" || $hook_suffix == "post-new.php") {
+      $asset_file = include_once(plugin_dir_path(__FILE__) . "build/index.asset.php");
+      wp_enqueue_style("pics-admin-plugin-style", plugin_dir_url(__FILE__) . "/build/index.css", array("wp-components"));
+      wp_enqueue_script("pics-admin-plugin-script", plugin_dir_url(__FILE__) . "build/index.js", $asset_file["dependencies"], $asset_file["version"], true);
+    }
+  }
 }
 
-add_action("admin_enqueue_scripts", "pics_admin_scripts");
-add_action("admin_menu", "pics_register_menus");
+
+$PiccasoPlugin = PicassoPlugin::get_instance();

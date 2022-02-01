@@ -10,6 +10,7 @@
     "i18n": "grunt i18n"
   },
   "devDependencies": {
+    "@wordpress/api-fetch": "^5.2.6",
     "@wordpress/components": "^19.2.0",
     "@wordpress/plugins": "^4.0.7",
     "@wordpress/scripts": "^19.2.2",
@@ -18,5 +19,8 @@
     "grunt-wp-readme-to-markdown": "~1.0.0"
   },
   "repository": "git@github.com:crafts-digitally/picasso.git",
-  "license": "GPL-2.0-only"
+  "license": "GPL-2.0-only",
+  "dependencies": {
+    "@wordpress/core-data": "^4.0.9"
+  }
 }

@@ -14,6 +14,26 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "@wordpress/api":
+/*!*****************************!*\
+  !*** external ["wp","api"] ***!
+  \*****************************/
+/***/ (function(module) {
+
+module.exports = window["wp"]["api"];
+
+/***/ }),
+
+/***/ "@wordpress/api-fetch":
+/*!**********************************!*\
+  !*** external ["wp","apiFetch"] ***!
+  \**********************************/
+/***/ (function(module) {
+
+module.exports = window["wp"]["apiFetch"];
+
+/***/ }),
+
 /***/ "@wordpress/components":
 /*!************************************!*\
   !*** external ["wp","components"] ***!
@@ -112,8 +132,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _scss_admin_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./scss/admin.scss */ "./src/admin/settings/scss/admin.scss");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api */ "@wordpress/api");
+/* harmony import */ var _wordpress_api__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__);
+
+
 
 
 
@@ -122,19 +148,51 @@ __webpack_require__.r(__webpack_exports__);
 const GeneralPage = () => {
   const [textColor, setTextColor] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)("#000000");
   const [backgroundColor, setBackgroundColor] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)("#ffffff");
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    _wordpress_api__WEBPACK_IMPORTED_MODULE_2___default().loadPromise.then(() => {
+      const model = new (_wordpress_api__WEBPACK_IMPORTED_MODULE_2___default().models.Settings)();
+      model.fetch().then(response => {
+        setTextColor(response.picasso_text_color ? "#aaaaaa" : "#000000");
+        setBackgroundColor(response.picasso_background_color ? String(response.picasso_background_color) : "#ffffff");
+      });
+    });
+  }, []);
+
+  const onSubmit = () => {
+    console.log(textColor);
+    _wordpress_api__WEBPACK_IMPORTED_MODULE_2___default().loadPromise.then(() => {
+      const model = new (_wordpress_api__WEBPACK_IMPORTED_MODULE_2___default().models.Settings)({
+        'picasso_text_color': textColor,
+        // stateの値
+        'picasso_background_color': backgroundColor // st // stateの値
+
+      });
+      const save = model.save();
+      save.success((response, status) => {
+        console.log(response);
+        console.log(status);
+      });
+      save.error((response, status) => {
+        console.log(response);
+        console.log(status);
+      });
+    });
+  };
+
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wrap"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, "\u57FA\u672C\u8A2D\u5B9A"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "\u6587\u5B57\u306E\u8272"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ColorPicker, {
-    label: "\u6587\u5B57\u306E\u8272",
-    defaultValue: "#000000",
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, "\u57FA\u672C\u8A2D\u5B9A"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "\u6587\u5B57\u8272"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ColorPicker, {
+    label: "\u6587\u5B57\u8272",
     color: textColor,
-    onChangeComplete: setTextColor
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "\u80CC\u666F\u306E\u8272"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ColorPicker, {
-    label: "\u80CC\u666F\u306E\u8272",
-    defaultValue: "#ffffff",
+    onChangeComplete: value => setTextColor(value.hex)
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "\u80CC\u666F\u8272"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ColorPicker, {
+    label: "\u80CC\u666F\u8272",
     color: backgroundColor,
-    onChangeComplete: setBackgroundColor
-  })));
+    onChangeComplete: value => setBackgroundColor(value.hex)
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
+    isPrimary: true,
+    onClick: onSubmit
+  }, "\u8A2D\u5B9A\u3092\u4FDD\u5B58"));
 };
 
 (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(GeneralPage, null), document.getElementById("picasso-general-page"));

@@ -1,9 +1,11 @@
 import { PluginBlockSettingsMenuItem, PluginSidebar, PluginSidebarMoreMenuItem, } from '@wordpress/edit-post';
 import { registerPlugin, PluginArea } from "@wordpress/plugins";
-import { PanelBody, Button } from '@wordpress/components';
-import { useCallback, Fragment } from "@wordpress/element"
+import { PanelBody, Button, G } from '@wordpress/components';
+import { useCallback, Fragment, useEffect } from "@wordpress/element"
 import { addFilter, createHooks } from "@wordpress/hooks"
 import { AsyncModeProvider, useSelect, select, subscribe, useDispatch, } from "@wordpress/data"
+import apiFetch from "@wordpress/api-fetch"
+import store from "@wordpress/core-data"
 
 function wrapPostFeaturedImage(OriginalComponent) {
   return (
@@ -23,20 +25,39 @@ globalhook.addFilter(
 );
 
 
-const postId = select("core/editor").getCurrentPostId()
+
+function FeaturedImageFrame(mediaId) {
+  const getMedia = async (mediaId) => {
+    const response = await apiFetch({ path: `/wp/v2/media/${mediaId}` })
+    return response;
+  }
+  const response = getMedia(mediaId)
+  return (
+    <div>
+      {response}
+    </div>
+  )
+}
 
 function BlockCount() {
-
-  return useSelect((select) => {
+  const mediaId = useSelect((select) => {
     return select("core/editor").getEditedPostAttribute("featured_media")
-  }, []);
+  }, [])
+  const media = useSelect((select) => {
+    return select("core").getEntityRecord("root", "media", mediaId)
+  })
+  console.log(media)
+  return (
+    <div>
+      <img src={media ? media.source_url : ""}></img>
+    </div>
+  )
 }
 
 function App() {
   return (
-    <AsyncModeProvider value={true}>
-      <BlockCount />
-    </AsyncModeProvider>
+
+    <BlockCount />
   );
 }
 

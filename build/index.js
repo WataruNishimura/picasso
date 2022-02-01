@@ -2,6 +2,16 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "@wordpress/api-fetch":
+/*!**********************************!*\
+  !*** external ["wp","apiFetch"] ***!
+  \**********************************/
+/***/ (function(module) {
+
+module.exports = window["wp"]["apiFetch"];
+
+/***/ }),
+
 /***/ "@wordpress/components":
 /*!************************************!*\
   !*** external ["wp","components"] ***!
@@ -9,6 +19,16 @@
 /***/ (function(module) {
 
 module.exports = window["wp"]["components"];
+
+/***/ }),
+
+/***/ "@wordpress/core-data":
+/*!**********************************!*\
+  !*** external ["wp","coreData"] ***!
+  \**********************************/
+/***/ (function(module) {
+
+module.exports = window["wp"]["coreData"];
 
 /***/ }),
 
@@ -149,6 +169,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_hooks__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/core-data */ "@wordpress/core-data");
+/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_7__);
+
+
 
 
 
@@ -163,18 +189,34 @@ function wrapPostFeaturedImage(OriginalComponent) {
 
 const globalhook = (0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_4__.createHooks)();
 globalhook.addFilter('editor.PostFeaturedImage', 'picasso/wrap-post-featured-image', wrapPostFeaturedImage);
-const postId = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_5__.select)("core/editor").getCurrentPostId();
+
+function FeaturedImageFrame(mediaId) {
+  const getMedia = async mediaId => {
+    const response = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_6___default()({
+      path: `/wp/v2/media/${mediaId}`
+    });
+    return response;
+  };
+
+  const response = getMedia(mediaId);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, response);
+}
 
 function BlockCount() {
-  return (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_5__.useSelect)(select => {
+  const mediaId = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_5__.useSelect)(select => {
     return select("core/editor").getEditedPostAttribute("featured_media");
   }, []);
+  const media = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_5__.useSelect)(select => {
+    return select("core").getEntityRecord("root", "media", mediaId);
+  });
+  console.log(media);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: media ? media.source_url : ""
+  }));
 }
 
 function App() {
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_data__WEBPACK_IMPORTED_MODULE_5__.AsyncModeProvider, {
-    value: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BlockCount, null));
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BlockCount, null);
 }
 
 const PluginSidebarTest = () => {
