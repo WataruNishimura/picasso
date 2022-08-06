@@ -5,7 +5,6 @@ import { useCallback, Fragment, useEffect } from "@wordpress/element"
 import { addFilter, createHooks } from "@wordpress/hooks"
 import { AsyncModeProvider, useSelect, select, subscribe, useDispatch, } from "@wordpress/data"
 import apiFetch from "@wordpress/api-fetch"
-import store from "@wordpress/core-data"
 
 function wrapPostFeaturedImage(OriginalComponent) {
   return (
